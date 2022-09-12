@@ -20,9 +20,10 @@ const DEMO_ID: &str = "61f638a2084cfa2e05d2569b";
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    fmt::fmt()
+    let sub = fmt::fmt()
         .with_span_events(FmtSpan::NEW | FmtSpan::CLOSE)
         .finish();
+    tracing::subscriber::set_global_default(sub)?;
 
     let seventv_emotes = providers::seventv::SevenTvSet::get(DEMO_ID).await?;
     let pwd = std::env::current_dir()?;
