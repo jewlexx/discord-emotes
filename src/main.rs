@@ -31,6 +31,8 @@ async fn main() -> anyhow::Result<()> {
             let name = emote.data.name.clone();
             let id = emote.data.id.clone();
 
+            trace!("Downloading emote {} ({}) from {}", name, id, url);
+
             let mut file = File::create(name)?;
 
             let bytes = reqwest::blocking::get(url)?.bytes()?;
