@@ -1,4 +1,4 @@
-mod seventv;
+pub(crate) mod seventv;
 use thiserror::Error as AsError;
 
 #[derive(Debug, AsError)]
