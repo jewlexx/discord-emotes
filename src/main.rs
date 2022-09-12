@@ -36,16 +36,22 @@ async fn main() -> anyhow::Result<()> {
         .emotes
         .par_iter()
         .map(|emote| -> anyhow::Result<()> {
-            let url = format!(
-                "https:{}{}",
-                emote.data.host.url, emote.data.host.files[0].name
-            );
-            let name = emote.data.name.clone();
-            let id = emote.data.id.clone();
+            let file = &emote
+                .data
+                .host
+                .files
+                .iter()
+                .find(|file| file.name == providers::seventv::Name::The4XAvif)
+                .unwrap();
+
+            let url = format!("https:{}/{}", emote.data.host.url, file.name);
+            let name = &emote.data.name;
+            let id = &emote.data.id;
+            let file_name = format!("{}.{}", name, file.name);
 
             trace!("Downloading emote {} ({}) from {}", name, id, url);
 
-            let mut file = File::create(emotes_dir.join(name))?;
+            let mut file = File::create(emotes_dir.join(file_name))?;
 
             let bytes = reqwest::blocking::get(url)?.bytes()?;
 

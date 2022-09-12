@@ -91,7 +91,7 @@ pub enum Format {
     Webp,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
 pub enum Name {
     #[serde(rename = "1x")]
     The1X,
@@ -109,4 +109,11 @@ pub enum Name {
     The4X,
     #[serde(rename = "4x.avif")]
     The4XAvif,
+}
+
+impl std::fmt::Display for Name {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let name = serde_json::to_string(self).unwrap().replace('"', "");
+        write!(f, "{}", name)
+    }
 }
