@@ -29,7 +29,9 @@ async fn main() -> anyhow::Result<()> {
 
     let emotes_dir = pwd.join("emotes");
 
-    create_dir(&emotes_dir)?;
+    if !emotes_dir.exists() {
+        create_dir(&emotes_dir)?;
+    }
 
     seventv_emotes
         .emotes
