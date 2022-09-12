@@ -1,5 +1,7 @@
 use serde::{Deserialize, Serialize};
 
+const BASE_URL: &str = "https://7tv.io/v3/emote-sets/";
+
 #[derive(Serialize, Deserialize)]
 pub struct SevenTvSet {
     #[serde(rename = "id")]
