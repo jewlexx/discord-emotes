@@ -36,7 +36,7 @@ async fn main() -> anyhow::Result<()> {
         .emotes
         .par_iter()
         .map(|emote| -> anyhow::Result<()> {
-            let url = emote.data.host.url.clone();
+            let url = "https:".to_owned() + &emote.data.host.url.clone();
             let name = emote.data.name.clone();
             let id = emote.data.id.clone();
 
