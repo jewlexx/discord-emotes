@@ -1,3 +1,6 @@
+use std::{fs::File, io::Write};
+
+use rayon::prelude::{IntoParallelRefIterator, ParallelIterator};
 use tracing_subscriber::fmt::{self, format::FmtSpan};
 
 use providers::Provider;
@@ -19,6 +22,24 @@ async fn main() -> anyhow::Result<()> {
         .finish();
 
     let seventv_emotes = providers::seventv::SevenTvSet::get(DEMO_ID).await?;
+
+    seventv_emotes
+        .emotes
+        .par_iter()
+        .map(|emote| -> anyhow::Result<()> {
+            let url = emote.data.host.url.clone();
+            let name = emote.data.name.clone();
+            let id = emote.data.id.clone();
+
+            let mut file = File::create(name)?;
+
+            let bytes = reqwest::blocking::get(url)?.bytes()?;
+
+            file.write_all(&bytes)?;
+
+            Ok(())
+        })
+        .collect::<anyhow::Result<Vec<_>>>()?;
 
     info!("Hello, world!");
 
