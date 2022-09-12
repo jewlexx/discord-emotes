@@ -8,6 +8,7 @@ impl Provider for SevenTvSet {
 
     async fn get(id: &str) -> Result<Self, super::ProviderError> {
         let url = format!("{}{}", Self::BASE_URL, id);
+        debug!("Fetching emotes from {}", url);
         let resp = reqwest::get(&url).await?.json::<Self>().await?;
 
         Ok(resp)

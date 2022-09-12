@@ -4,7 +4,6 @@ use std::{
 };
 
 use rayon::prelude::{IntoParallelRefIterator, ParallelIterator};
-use tracing_subscriber::fmt::{self, format::FmtSpan};
 
 use providers::Provider;
 
@@ -20,10 +19,9 @@ const DEMO_ID: &str = "61f638a2084cfa2e05d2569b";
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    let sub = fmt::fmt()
-        .with_span_events(FmtSpan::NEW | FmtSpan::CLOSE)
-        .finish();
-    tracing::subscriber::set_global_default(sub)?;
+    tracing_subscriber::fmt()
+        .with_max_level(tracing::Level::TRACE)
+        .init();
 
     let seventv_emotes = providers::seventv::SevenTvSet::get(DEMO_ID).await?;
     let pwd = std::env::current_dir()?;
@@ -53,8 +51,6 @@ async fn main() -> anyhow::Result<()> {
             Ok(())
         })
         .collect::<anyhow::Result<Vec<_>>>()?;
-
-    info!("Hello, world!");
 
     Ok(())
 }
