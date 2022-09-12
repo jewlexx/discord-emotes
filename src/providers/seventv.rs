@@ -1,6 +1,18 @@
 use serde::{Deserialize, Serialize};
 
-const BASE_URL: &str = "https://7tv.io/v3/emote-sets/";
+use super::Provider;
+
+#[async_trait]
+impl Provider for SevenTvSet {
+    const BASE_URL: &'static str = "https://7tv.io/v3/emote-sets/";
+
+    async fn get(id: &str) -> Result<Self, super::ProviderError> {
+        let url = format!("{}{}", Self::BASE_URL, id);
+        let resp = reqwest::get(&url).await?.json::<Self>().await?;
+
+        Ok(resp)
+    }
+}
 
 #[derive(Serialize, Deserialize)]
 pub struct SevenTvSet {
