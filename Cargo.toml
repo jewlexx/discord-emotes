@@ -6,5 +6,10 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+log = "0.4.17"
+reqwest = { version = "0.11.11", features = ["json", "native-tls"] }
 serde = { version = "1.0.144", features = ["derive"] }
 serde_json = "1.0.85"
+tokio = { version = "1.21.0", features = ["full"] }
+tracing = { version = "0.1.36", features = ["log", "log-always"] }
+tracing-subscriber = "0.3.15"
