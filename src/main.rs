@@ -1,4 +1,7 @@
-use std::{fs::File, io::Write};
+use std::{
+    fs::{create_dir, File},
+    io::Write,
+};
 
 use rayon::prelude::{IntoParallelRefIterator, ParallelIterator};
 use tracing_subscriber::fmt::{self, format::FmtSpan};
@@ -22,6 +25,11 @@ async fn main() -> anyhow::Result<()> {
         .finish();
 
     let seventv_emotes = providers::seventv::SevenTvSet::get(DEMO_ID).await?;
+    let pwd = std::env::current_dir()?;
+
+    let emotes_dir = pwd.join("emotes");
+
+    create_dir(&emotes_dir)?;
 
     seventv_emotes
         .emotes
@@ -33,7 +41,7 @@ async fn main() -> anyhow::Result<()> {
 
             trace!("Downloading emote {} ({}) from {}", name, id, url);
 
-            let mut file = File::create(name)?;
+            let mut file = File::create(emotes_dir.join(name))?;
 
             let bytes = reqwest::blocking::get(url)?.bytes()?;
 
