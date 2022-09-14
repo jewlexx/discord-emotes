@@ -26,12 +26,21 @@ pub trait Provider: Send + Sync + Sized {
 
 pub struct ProviderEmotes {
     pub provider: Providers,
+    pub emotes: Vec<Emote>,
 }
 
 pub struct Emote {
     pub name: String,
-    pub extension: FileType,
     pub url: String,
+    pub size: Size,
+    pub extension: FileType,
+}
+
+pub enum Size {
+    X1,
+    X2,
+    X3,
+    X4,
 }
 
 pub enum FileType {
@@ -48,6 +57,17 @@ impl std::fmt::Display for FileType {
             FileType::Webp => write!(f, "webp"),
             FileType::Png => write!(f, "png"),
             FileType::Jpeg => write!(f, "jpeg"),
+        }
+    }
+}
+
+impl From<Size> for u8 {
+    fn from(size: Size) -> Self {
+        match size {
+            Size::X1 => 1,
+            Size::X2 => 2,
+            Size::X3 => 3,
+            Size::X4 => 4,
         }
     }
 }
