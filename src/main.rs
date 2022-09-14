@@ -19,6 +19,12 @@ fn main() -> anyhow::Result<()> {
         .with_max_level(tracing::Level::TRACE)
         .init();
 
+    if dotenv::dotenv().is_ok() {
+        info!("Loaded .env file");
+    } else {
+        panic!("No .env file found");
+    }
+
     let seventv_emotes: ProviderEmotes = providers::seventv::SevenTvSet::get(DEMO_ID)?.into();
     let pwd = std::env::current_dir()?;
 
