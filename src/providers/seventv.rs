@@ -40,6 +40,7 @@ impl From<SevenTvSet> for ProviderEmotes {
 impl Provider for SevenTvSet {
     const BASE_URL: &'static str = "https://7tv.io/v3/emote-sets/";
 
+    #[instrument]
     fn get(id: &str) -> Result<Self, super::ProviderError> {
         let url = format!("{}{}", Self::BASE_URL, id);
         debug!("Fetching emotes from {}", url);

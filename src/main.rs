@@ -6,6 +6,7 @@ use std::{
 use rayon::prelude::{IntoParallelRefIterator, ParallelIterator};
 
 use providers::{Provider, ProviderEmotes};
+use tracing_subscriber::fmt::format::FmtSpan;
 
 mod providers;
 
@@ -36,6 +37,7 @@ fn verify_dotenv() -> Vec<&'static str> {
 
 fn main() -> anyhow::Result<()> {
     tracing_subscriber::fmt()
+        .with_span_events(FmtSpan::ENTER | FmtSpan::EXIT)
         .with_max_level(tracing::Level::TRACE)
         .init();
 
