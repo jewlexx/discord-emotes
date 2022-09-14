@@ -1,31 +1,40 @@
-pub(crate) mod seventv;
+pub mod seventv;
 use thiserror::Error as AsError;
 
 #[derive(Debug, AsError)]
-pub(crate) enum ProviderError {
+pub enum ProviderError {
     #[error("Error interacting with upstream API")]
     RequestError(#[from] reqwest::Error),
     #[error("Error parsing JSON")]
     JsonError(#[from] serde_json::Error),
 }
 
+pub enum Providers {
+    SevenTv,
+    Bttv,
+    Ffz,
+    Ttv,
+}
+
 #[async_trait]
-pub(crate) trait Provider: Send + Sync + Sized {
+pub trait Provider: Send + Sync + Sized {
     /// The API base url for getting the list of emotes
     const BASE_URL: &'static str;
 
     async fn get(id: &str) -> Result<Self, ProviderError>;
 }
 
-pub(crate) struct ProviderEmotes {}
-
-pub(crate) struct Emote {
-    pub(crate) name: String,
-    pub(crate) extension: FileType,
-    pub(crate) url: String,
+pub struct ProviderEmotes {
+    pub provider: Providers,
 }
 
-pub(crate) enum FileType {
+pub struct Emote {
+    pub name: String,
+    pub extension: FileType,
+    pub url: String,
+}
+
+pub enum FileType {
     Avif,
     Webp,
     Png,

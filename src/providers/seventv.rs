@@ -17,62 +17,62 @@ impl Provider for SevenTvSet {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SevenTvSet {
-    pub(crate) id: Id,
-    pub(crate) name: String,
-    pub(crate) tags: Vec<Option<serde_json::Value>>,
-    pub(crate) immutable: bool,
-    pub(crate) privileged: bool,
-    pub(crate) emotes: Vec<Emote>,
-    pub(crate) capacity: i64,
-    pub(crate) owner: Owner,
+    pub id: Id,
+    pub name: String,
+    pub tags: Vec<Option<serde_json::Value>>,
+    pub immutable: bool,
+    pub privileged: bool,
+    pub emotes: Vec<Emote>,
+    pub capacity: i64,
+    pub owner: Owner,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Emote {
-    pub(crate) id: String,
-    pub(crate) name: String,
-    pub(crate) flags: i64,
+    pub id: String,
+    pub name: String,
+    pub flags: i64,
     #[serde(rename = "Timestamp")]
-    pub(crate) timestamp: String,
-    pub(crate) actor_id: Id,
-    pub(crate) data: Data,
+    pub timestamp: String,
+    pub actor_id: Id,
+    pub data: Data,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Data {
-    pub(crate) id: String,
-    pub(crate) name: String,
-    pub(crate) flags: i64,
-    pub(crate) tags: Vec<Option<serde_json::Value>>,
-    pub(crate) lifecycle: i64,
-    pub(crate) listed: bool,
-    pub(crate) animated: bool,
-    pub(crate) owner: Owner,
-    pub(crate) host: Host,
+    pub id: String,
+    pub name: String,
+    pub flags: i64,
+    pub tags: Vec<Option<serde_json::Value>>,
+    pub lifecycle: i64,
+    pub listed: bool,
+    pub animated: bool,
+    pub owner: Owner,
+    pub host: Host,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Host {
-    pub(crate) url: String,
-    pub(crate) files: Vec<File>,
+    pub url: String,
+    pub files: Vec<File>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct File {
-    pub(crate) name: Name,
-    pub(crate) width: i64,
-    pub(crate) height: i64,
-    pub(crate) frame_count: i64,
-    pub(crate) size: i64,
-    pub(crate) format: Format,
+    pub name: Name,
+    pub width: i64,
+    pub height: i64,
+    pub frame_count: i64,
+    pub size: i64,
+    pub format: Format,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Owner {
-    pub(crate) id: String,
-    pub(crate) username: String,
-    pub(crate) display_name: String,
-    pub(crate) roles: Vec<String>,
+    pub id: String,
+    pub username: String,
+    pub display_name: String,
+    pub roles: Vec<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
