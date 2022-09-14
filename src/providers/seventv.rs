@@ -1,17 +1,78 @@
+use std::{io::Write, path::Path};
+
+use rayon::prelude::{IntoParallelIterator, ParallelIterator};
 use serde::{Deserialize, Serialize};
 
-use super::Provider;
+use super::{Provider, ProviderEmotes};
 
-#[async_trait]
+impl From<SevenTvSet> for ProviderEmotes {
+    fn from(set: SevenTvSet) -> Self {
+        let emotes = set
+            .emotes
+            .into_iter()
+            .map(|emote| {
+                let file = &emote
+                    .data
+                    .host
+                    .files
+                    .iter()
+                    .find(|file| file.name == Name::The4XAvif)
+                    .unwrap();
+
+                let name = emote.id;
+                let url = format!("https:{}/{}", emote.data.host.url, file.name);
+
+                super::Emote {
+                    name,
+                    url,
+                    size: super::Size::X4,
+                    extension: super::FileType::Avif,
+                }
+            })
+            .collect();
+
+        ProviderEmotes {
+            provider: super::Providers::SevenTv,
+            emotes,
+        }
+    }
+}
+
 impl Provider for SevenTvSet {
     const BASE_URL: &'static str = "https://7tv.io/v3/emote-sets/";
 
-    async fn get(id: &str) -> Result<Self, super::ProviderError> {
+    fn get(id: &str) -> Result<Self, super::ProviderError> {
         let url = format!("{}{}", Self::BASE_URL, id);
         debug!("Fetching emotes from {}", url);
-        let resp = reqwest::get(&url).await?.json::<Self>().await?;
+        let resp = reqwest::blocking::get(&url)?.json::<Self>()?;
 
         Ok(resp)
+    }
+
+    fn download_to_dir(
+        emotes: &ProviderEmotes,
+        dir: impl AsRef<Path>,
+    ) -> Result<(), super::ProviderError> {
+        let dir: &Path = dir.as_ref();
+
+        emotes
+            .emotes
+            .into_par_iter()
+            .map(|emote| -> anyhow::Result<()> {
+                let file_name = format!("{}.{}", emote.name, emote.extension);
+
+                trace!("Downloading emote {} from {}", emote.name, emote.url);
+
+                let mut file = std::fs::File::create(dir.join(file_name))?;
+
+                let bytes = reqwest::blocking::get(&emote.url)?.bytes()?;
+
+                file.write_all(&bytes)?;
+
+                Ok(())
+            });
+
+        Ok(())
     }
 }
 

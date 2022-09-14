@@ -5,25 +5,21 @@ use std::{
 
 use rayon::prelude::{IntoParallelRefIterator, ParallelIterator};
 
-use providers::Provider;
+use providers::{Provider, ProviderEmotes};
 
 mod providers;
 
 #[macro_use]
 extern crate tracing;
 
-#[macro_use]
-extern crate async_trait;
-
 const DEMO_ID: &str = "61f638a2084cfa2e05d2569b";
 
-#[tokio::main]
-async fn main() -> anyhow::Result<()> {
+fn main() -> anyhow::Result<()> {
     tracing_subscriber::fmt()
         .with_max_level(tracing::Level::TRACE)
         .init();
 
-    let seventv_emotes = providers::seventv::SevenTvSet::get(DEMO_ID).await?;
+    let seventv_emotes: ProviderEmotes = providers::seventv::SevenTvSet::get(DEMO_ID)?.into();
     let pwd = std::env::current_dir()?;
 
     let emotes_dir = pwd.join("emotes");
@@ -36,24 +32,13 @@ async fn main() -> anyhow::Result<()> {
         .emotes
         .par_iter()
         .map(|emote| -> anyhow::Result<()> {
-            let file = &emote
-                .data
-                .host
-                .files
-                .iter()
-                .find(|file| file.name == providers::seventv::Name::The4XAvif)
-                .unwrap();
+            let file_name = format!("{}.{}", emote.name, emote.extension);
 
-            let url = format!("https:{}/{}", emote.data.host.url, file.name);
-            let name = &emote.data.name;
-            let id = &emote.data.id;
-            let file_name = format!("{}.{}", name, file.name);
-
-            trace!("Downloading emote {} ({}) from {}", name, id, url);
+            trace!("Downloading emote {} from {}", emote.name, emote.url);
 
             let mut file = File::create(emotes_dir.join(file_name))?;
 
-            let bytes = reqwest::blocking::get(url)?.bytes()?;
+            let bytes = reqwest::blocking::get(&emote.url)?.bytes()?;
 
             file.write_all(&bytes)?;
 
