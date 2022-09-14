@@ -19,6 +19,8 @@ impl From<SevenTvSet> for ProviderEmotes {
                 let name = emote.id;
                 let url = format!("https:{}/{}", emote.data.host.url, file.name);
 
+                trace!("Found emote: {} -> {}", name, url);
+
                 super::Emote {
                     name,
                     url,
