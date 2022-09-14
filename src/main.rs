@@ -56,5 +56,7 @@ fn main() -> anyhow::Result<()> {
         create_dir(&emotes_dir)?;
     }
 
+    seventv_emotes.download_to_dir(emotes_dir)?;
+
     Ok(())
 }
