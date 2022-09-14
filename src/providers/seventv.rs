@@ -40,10 +40,10 @@ impl From<SevenTvSet> for ProviderEmotes {
 impl Provider for SevenTvSet {
     const BASE_URL: &'static str = "https://7tv.io/v3/emote-sets/";
 
-    #[instrument]
+    #[instrument(level = tracing::Level::TRACE)]
     fn get(id: &str) -> Result<Self, super::ProviderError> {
         let url = format!("{}{}", Self::BASE_URL, id);
-        debug!("Fetching emotes from {}", url);
+        trace!("Fetching emotes from {}", url);
         let resp = reqwest::blocking::get(&url)?.json::<Self>()?;
 
         Ok(resp)
