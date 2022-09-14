@@ -1,9 +1,4 @@
-use std::{
-    fs::{create_dir, File},
-    io::Write,
-};
-
-use rayon::prelude::{IntoParallelRefIterator, ParallelIterator};
+use std::fs::create_dir;
 
 use providers::{Provider, ProviderEmotes};
 use tracing_subscriber::fmt::format::FmtSpan;
