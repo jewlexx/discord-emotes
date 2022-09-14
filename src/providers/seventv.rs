@@ -1,6 +1,3 @@
-use std::{io::Write, path::Path};
-
-use rayon::prelude::{IntoParallelIterator, ParallelIterator};
 use serde::{Deserialize, Serialize};
 
 use super::{Provider, ProviderEmotes};
@@ -47,33 +44,6 @@ impl Provider for SevenTvSet {
         let resp = reqwest::blocking::get(&url)?.json::<Self>()?;
 
         Ok(resp)
-    }
-
-    fn download_to_dir(
-        emotes: ProviderEmotes,
-        dir: impl AsRef<Path>,
-    ) -> Result<(), super::ProviderError> {
-        let dir: &Path = dir.as_ref();
-
-        emotes
-            .emotes
-            .into_par_iter()
-            .map(|emote| -> Result<(), super::ProviderError> {
-                let file_name = format!("{}.{}", emote.name, emote.extension);
-
-                trace!("Downloading emote {} from {}", emote.name, emote.url);
-
-                let mut file = std::fs::File::create(dir.join(file_name))?;
-
-                let bytes = reqwest::blocking::get(&emote.url)?.bytes()?;
-
-                file.write_all(&bytes)?;
-
-                Ok(())
-            })
-            .collect::<Result<Vec<()>, super::ProviderError>>()?;
-
-        Ok(())
     }
 }
 
