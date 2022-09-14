@@ -37,7 +37,7 @@ pub struct ProviderEmotes {
 }
 
 impl ProviderEmotes {
-    fn download_to_dir(self, dir: impl AsRef<Path>) -> Result<(), ProviderError> {
+    pub fn download_to_dir(self, dir: impl AsRef<Path>) -> Result<(), ProviderError> {
         let dir: &Path = dir.as_ref();
 
         self.emotes

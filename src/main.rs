@@ -56,23 +56,5 @@ fn main() -> anyhow::Result<()> {
         create_dir(&emotes_dir)?;
     }
 
-    seventv_emotes
-        .emotes
-        .par_iter()
-        .map(|emote| -> anyhow::Result<()> {
-            let file_name = format!("{}.{}", emote.name, emote.extension);
-
-            trace!("Downloading emote {} from {}", emote.name, emote.url);
-
-            let mut file = File::create(emotes_dir.join(file_name))?;
-
-            let bytes = reqwest::blocking::get(&emote.url)?.bytes()?;
-
-            file.write_all(&bytes)?;
-
-            Ok(())
-        })
-        .collect::<anyhow::Result<Vec<_>>>()?;
-
     Ok(())
 }
