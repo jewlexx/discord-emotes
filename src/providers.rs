@@ -6,9 +6,11 @@ use thiserror::Error as AsError;
 #[derive(Debug, AsError)]
 pub enum ProviderError {
     #[error("Error interacting with upstream API")]
-    RequestError(#[from] reqwest::Error),
+    Request(#[from] reqwest::Error),
     #[error("Error parsing JSON")]
-    JsonError(#[from] serde_json::Error),
+    Json(#[from] serde_json::Error),
+    #[error("Error saving emotes")]
+    Io(#[from] std::io::Error),
 }
 
 unsafe impl Send for ProviderError {}
@@ -27,8 +29,7 @@ pub trait Provider: Send + Sync + Sized + Into<ProviderEmotes> {
 
     fn get(id: &str) -> Result<Self, ProviderError>;
 
-    fn download_to_dir(emotes: &ProviderEmotes, dir: impl AsRef<Path>)
-        -> Result<(), ProviderError>;
+    fn download_to_dir(emotes: ProviderEmotes, dir: impl AsRef<Path>) -> Result<(), ProviderError>;
 }
 
 pub struct ProviderEmotes {

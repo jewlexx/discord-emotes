@@ -50,7 +50,7 @@ impl Provider for SevenTvSet {
     }
 
     fn download_to_dir(
-        emotes: &ProviderEmotes,
+        emotes: ProviderEmotes,
         dir: impl AsRef<Path>,
     ) -> Result<(), super::ProviderError> {
         let dir: &Path = dir.as_ref();
@@ -58,7 +58,7 @@ impl Provider for SevenTvSet {
         emotes
             .emotes
             .into_par_iter()
-            .map(|emote| -> anyhow::Result<()> {
+            .map(|emote| -> Result<(), super::ProviderError> {
                 let file_name = format!("{}.{}", emote.name, emote.extension);
 
                 trace!("Downloading emote {} from {}", emote.name, emote.url);
@@ -70,7 +70,8 @@ impl Provider for SevenTvSet {
                 file.write_all(&bytes)?;
 
                 Ok(())
-            });
+            })
+            .collect::<Result<Vec<()>, super::ProviderError>>()?;
 
         Ok(())
     }
