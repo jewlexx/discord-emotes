@@ -16,3 +16,29 @@ pub(crate) trait Provider: Send + Sync + Sized {
 
     async fn get(id: &str) -> Result<Self, ProviderError>;
 }
+
+pub(crate) struct ProviderEmotes {}
+
+pub(crate) struct Emote {
+    pub(crate) name: String,
+    pub(crate) extension: FileType,
+    pub(crate) url: String,
+}
+
+pub(crate) enum FileType {
+    Avif,
+    Webp,
+    Png,
+    Jpeg,
+}
+
+impl std::fmt::Display for FileType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            FileType::Avif => write!(f, "avif"),
+            FileType::Webp => write!(f, "webp"),
+            FileType::Png => write!(f, "png"),
+            FileType::Jpeg => write!(f, "jpeg"),
+        }
+    }
+}
