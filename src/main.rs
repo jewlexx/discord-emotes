@@ -8,7 +8,10 @@ mod providers;
 #[macro_use]
 extern crate tracing;
 
+// The id of my seventv emotes set
 const DEMO_ID: &str = "61f638a2084cfa2e05d2569b";
+// My Twitch username
+const DEMO_USERID: &str = "sapphicjewl";
 
 rotenv_codegen::dotenv_module!(visibility = "pub(crate)");
 
