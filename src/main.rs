@@ -18,7 +18,7 @@ const _: &str = dotenv_vars::CLIENT_ID;
 
 fn main() -> anyhow::Result<()> {
     tracing_subscriber::fmt()
-        .with_span_events(FmtSpan::ENTER | FmtSpan::EXIT)
+        .with_span_events(FmtSpan::FULL)
         .with_max_level(tracing::Level::TRACE)
         .init();
 
