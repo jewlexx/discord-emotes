@@ -11,7 +11,7 @@ extern crate tracing;
 // The id of my seventv emotes set
 const DEMO_ID: &str = "61f638a2084cfa2e05d2569b";
 // My Twitch username
-const DEMO_USERID: &str = "sapphicjewl";
+const DEMO_USERNAME: &str = "sapphicjewl";
 
 rotenv_codegen::dotenv_module!(visibility = "pub(crate)");
 
@@ -24,6 +24,8 @@ fn main() -> anyhow::Result<()> {
         .with_span_events(FmtSpan::FULL)
         .with_max_level(tracing::Level::TRACE)
         .init();
+
+    let user_id = providers::twitch::get_user_id(DEMO_USERNAME)?;
 
     let seventv_emotes: ProviderEmotes = providers::seventv::SevenTvSet::get(DEMO_ID)?.into();
     let pwd = std::env::current_dir()?;
