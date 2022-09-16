@@ -10,20 +10,16 @@ extern crate tracing;
 
 const DEMO_ID: &str = "61f638a2084cfa2e05d2569b";
 
-fn verify_dotenv() -> Vec<&'static str> {
-    if dotenv::dotenv().is_ok() {
-        info!("Loaded .env file");
-    } else {
-        panic!("No .env file found");
-    }
+rotenv_codegen::dotenv_module!(visibility = "pub(crate)");
 
+fn verify_dotenv() -> Vec<&'static str> {
     let mut missing = Vec::new();
 
-    if dotenv::var("CLIENT_ID").is_err() {
+    if std::env::var("CLIENT_ID").is_err() {
         missing.push("CLIENT_ID");
     }
 
-    if dotenv::var("CLIENT_SECRET").is_err() {
+    if std::env::var("CLIENT_SECRET").is_err() {
         missing.push("CLIENT_SECRET");
     }
 
