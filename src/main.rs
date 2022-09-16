@@ -27,6 +27,8 @@ fn main() -> anyhow::Result<()> {
 
     let user_id = providers::twitch::get_user_id(DEMO_USERNAME)?;
 
+    debug!("User ID: {}", user_id);
+
     let seventv_emotes: ProviderEmotes = providers::seventv::SevenTvSet::get(DEMO_ID)?.into();
     let pwd = std::env::current_dir()?;
 
