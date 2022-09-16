@@ -1,4 +1,6 @@
 pub mod seventv;
+pub mod twitch;
+
 use std::{io::Write, path::Path};
 
 use rayon::prelude::{IntoParallelIterator, ParallelIterator};
