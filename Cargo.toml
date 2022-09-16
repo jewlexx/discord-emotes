@@ -7,6 +7,7 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0.64"
+lazy_static = "1.4.0"
 rayon = "1.5.3"
 reqwest = { version = "0.11.11", features = ["json", "native-tls", "blocking"], default-features = false }
 rotenv = "0.15.0"
