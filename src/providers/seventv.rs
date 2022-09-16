@@ -44,15 +44,20 @@ impl Provider for SevenTvSet {
     fn get(id: &str) -> Result<Self, super::ProviderError> {
         let url = format!("{}{}", Self::BASE_URL, id);
         trace!("Fetching emotes from {}", url);
-        let resp = reqwest::blocking::get(&url)?.json::<Self>()?;
 
-        Ok(resp)
+        let resp = reqwest::blocking::get(&url)?.text()?;
+
+        debug!("Got reponse {}", resp);
+
+        let resp_json = serde_json::from_str(&resp)?;
+
+        Ok(resp_json)
     }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SevenTvSet {
-    pub id: Id,
+    pub id: String,
     pub name: String,
     pub tags: Vec<Option<serde_json::Value>>,
     pub immutable: bool,
@@ -68,8 +73,8 @@ pub struct Emote {
     pub name: String,
     pub flags: i64,
     #[serde(rename = "Timestamp")]
-    pub timestamp: String,
-    pub actor_id: Id,
+    pub timestamp: Option<String>,
+    pub actor_id: Option<String>,
     pub data: Data,
 }
 
@@ -97,8 +102,8 @@ pub struct File {
     pub name: Name,
     pub width: i64,
     pub height: i64,
-    pub frame_count: i64,
-    pub size: i64,
+    pub frame_count: Option<i64>,
+    pub size: Option<i64>,
     pub format: Format,
 }
 
@@ -108,14 +113,6 @@ pub struct Owner {
     pub username: String,
     pub display_name: String,
     pub roles: Vec<String>,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub enum Id {
-    #[serde(rename = "000000000000000000000000")]
-    The000000000000000000000000,
-    #[serde(rename = "61f638a2084cfa2e05d2569b")]
-    The61F638A2084Cfa2E05D2569B,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
